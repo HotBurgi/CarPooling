@@ -1,0 +1,43 @@
+services:
+  # Il server Web + PHP
+  web:
+    image: php:8.2-apache
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - lamp-network
+    command: sh -c "docker-php-ext-install pdo pdo_mysql mysqli && apache2-foreground"
+
+  # Il Database (MariaDB)
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Password di root
+      MYSQL_DATABASE: streaming # Nome DB iniziale
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - lamp-network
+
+  # phpMyAdmin (per gestire il DB visivamente)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+    networks:
+      - lamp-network
+
+volumes:
+  db_data:
+
+networks:
+  lamp-network:
