@@ -1,0 +1,15 @@
+{
+"require": {
+"slim/slim": "^4.15",
+"slim/psr7": "^1.8",
+"league/plates": "^3.6",
+"php-di/slim-bridge": "^3.4"
+},
+"autoload": {
+"psr-4": {
+"Controller\\": "Controller/",
+"Model\\": "Model/",
+"Util\\": "Util/"
+}
+}
+}

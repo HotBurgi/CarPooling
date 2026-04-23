@@ -1,0 +1,52 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: carpooling_app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: CarPoolingDB
+      DB_USER: carpool
+      DB_PASSWORD: carpool
+      DB_CHAR: utf8mb4
+      BASE_PATH: ""
+      IMAGES_PATH: /public/images
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+
+  db:
+    image: mysql:8.4
+    container_name: carpooling_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: CarPoolingDB
+      MYSQL_USER: carpool
+      MYSQL_PASSWORD: carpool
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - carpooling_db_data:/var/lib/mysql
+      - ../CarPoolingDB.sql:/docker-entrypoint-initdb.d/01-CarPoolingDB.sql:ro
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: carpooling_phpmyadmin
+    depends_on:
+      - db
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "8081:80"
+
+volumes:
+  carpooling_db_data:
