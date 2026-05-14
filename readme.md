@@ -1,91 +1,26 @@
-# CarPooling Slim MVC
+# Progetto CarPooling (Esame di Stato 2017)
 
-Applicazione Slim 4 (MVC + Plates) collegata al database `CarPoolingDB`.
+Applicazione web sviluppata in **PHP (Slim 4)** con pattern **MVC**, collegata al database `carpooling`.
 
-## Funzionalita implementate
+## Struttura del Progetto (Lavoro di Gruppo)
 
-- `Query 1`: autisti disponibili per tratta+data con prenotazioni aperte.
-- `Query 2`: dati promemoria email per prenotazione accettata.
-- `Query 3`: passeggeri di un viaggio con media feedback sopra soglia.
+Il progetto è stato suddiviso in tre moduli, uno per ogni membro del gruppo, corrispondenti alle tre query richieste:
 
-Ogni query ha la sua pagina dedicata:
+1. **Autisti (`AutistaController` + `AutistaRepository`)**
+   Ricerca degli autisti che propongono un viaggio per una determinata tratta e data, con prenotazioni aperte.
+2. **Promemoria (`RichiestaController` + `RichiestaRepository`)**
+   Estrazione dei dati necessari per inviare una mail di promemoria a un passeggero per la sua prenotazione.
+3. **Passeggeri (`PasseggeroController` + `PasseggeroRepository`)**
+   Elenco dei passeggeri prenotati per un viaggio specifico, filtrati in base alla loro media voti (soglia minima).
 
-- `/carpooling/autisti`
-- `/carpooling/promemoria`
-- `/carpooling/passeggeri`
+## Avvio Rapido (con Docker)
 
----
+1. Apri il terminale nella cartella `carpooling`.
+2. Esegui il comando:
+   ```bash
+   docker compose up -d
+   ```
+3. L'applicazione sarà visibile su: [http://localhost:8080](http://localhost:8080)
+4. Il database phpMyAdmin sarà accessibile su: [http://localhost:8081](http://localhost:8081)
 
-## Avvio con un unico comando Docker (consigliato)
-
-Prerequisito: Docker Desktop installato.
-
-Dalla cartella `slimApp` esegui:
-
-```bash
-docker compose up --build
-```
-
-Poi apri:
-
-- App: http://localhost:8080
-- DB MySQL: `localhost:3307`
-- Dashboard MySQL (phpMyAdmin): http://localhost:8081
-
-Credenziali DB usate in Docker:
-
-- Database: `CarPoolingDB`
-- User: `carpool`
-- Password: `carpool`
-- Root password: `root`
-
-Nota: il dump `../CarPoolingDB.sql` viene importato automaticamente al primo avvio del container DB.
-
-Per fermare:
-
-```bash
-docker compose down
-```
-
-Per azzerare anche i dati DB persistiti:
-
-```bash
-docker compose down -v
-```
-
----
-
-## Avvio locale senza Docker
-
-Prerequisiti:
-
-- PHP 8.1+
-- Apache/Nginx con URL rewriting verso `public/index.php`
-- MariaDB/MySQL con database creato da `CarPoolingDB.sql`
-
-Configura `conf/config.php` (oppure variabili ambiente) con i parametri DB locali.
-
-Se necessario installa dipendenze:
-
-```bash
-composer install
-```
-
-Servi la cartella `slimApp` con il web server e apri la root applicativa.
-
----
-
-## Struttura principale
-
-- `public/index.php`: bootstrap app e registrazione route modulari
-- `routes/`: file route separati per home e query
-- `Controller/HomeController.php`: home dashboard
-- `Controller/QueryAutistiController.php`: pagina query autisti
-- `Controller/QueryPromemoriaController.php`: pagina query promemoria
-- `Controller/QueryPasseggeriController.php`: pagina query passeggeri
-- `Model/Query/`: query SQL in file separati (uno per query)
-- `Model/Table/`: accesso tabellare in file separati (uno per tabella)
-- `templates/carPoolingLayout.tpl`: layout principale
-- `templates/carPoolingHome.tpl`: dashboard home
-- `templates/carPoolingQueryAutisti.tpl`, `templates/carPoolingQueryPromemoria.tpl`, `templates/carPoolingQueryPasseggeri.tpl`: viste query
-- `docker-compose.yml` + `Dockerfile`: esecuzione containerizzata
+(Il database verrà inizializzato automaticamente con il file `carpooling.sql` al primo avvio).
